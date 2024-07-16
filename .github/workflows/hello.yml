@@ -20,3 +20,32 @@ jobs:
     - name: Check java version
       run: |
         java -version
+
+    - name: print var
+      env:
+        TEST: "Hello World"
+      run: |
+        echo $TEST >> artifact_file.txt
+        echo ${{ env.GITHUB_WORKSPACE }} >> artifact_file.txt
+
+    - name: upload artifact
+      uses: actions/upload-artifact@v2
+      with:
+        name: artifact
+        files: artifact_file.txt
+
+  test:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: download artifact
+      uses: actions/download-artifact@v2
+      with:
+        name: artifact
+
+    - name: print artifact
+      run: |
+        cat artifact_file.txt
+        
