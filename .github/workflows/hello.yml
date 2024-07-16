@@ -11,3 +11,12 @@ jobs:
 
     - name: Check env
       run: env | sort
+
+    - uses: actions/setup-java@v1
+      with:
+          java-version: 17
+          java-package: jdk
+
+    - name: Check java version
+      run: |
+        java -version
