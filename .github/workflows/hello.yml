@@ -4,6 +4,15 @@ on: [push]
 
 jobs:
   build:
+    strategy:
+      fail-fast: false
+      matrix:
+        java-version: [ 11, 17 ]
+        allow-failure: [false]
+        include:
+          - java-version: 29
+            experimental: true
+    continue-on-error: ${{ matrix.allow-failure }}
     runs-on: ubuntu-latest
 
     steps:
@@ -14,7 +23,7 @@ jobs:
 
     - uses: actions/setup-java@v1
       with:
-          java-version: 17
+          java-version: ${{ matrix.java-version }}
           java-package: jdk
 
     - name: Check java version
