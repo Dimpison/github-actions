@@ -2,6 +2,9 @@ name: hello
 
 on: [push]
 
+env:
+  ARTIFACT_FILE: my-file-${{ matrix.java-version }}.txt
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -34,27 +37,38 @@ jobs:
       env:
         TEST: "Hello World"
       run: |
-        echo $TEST >> artifact_file.txt
-        echo ${{ env.GITHUB_USER }} >> artifact_file.txt
+        echo $TEST >> ${{ env.ARTIFACT_FILE }}
+        echo ${{ env.GITHUB_USER }} >> ${{ env.ARTIFACT_FILE }}
 
     - name: upload artifact
       uses: actions/upload-artifact@v4
       with:
-        name: artifact
-        path: artifact_file.txt
+        name: ${{ env.ARTIFACT_FILE }}
+        path: ${{ env.ARTIFACT_FILE }}
 
   test:
     needs: build
+
     runs-on: ubuntu-latest
+    continue-on-error: ${{ matrix.allow-failure }}
+    strategy:
+      fail-fast: false
+      matrix:
+        java-version: [ 11, 17 ]
+        allow-failure: [false]
+        include:
+          - java-version: 29
+            allow-failure: true
+
     steps:
     - uses: actions/checkout@v2
 
     - name: download artifact
       uses: actions/download-artifact@v4
       with:
-        name: artifact
+        name: ${{ env.ARTIFACT_FILE }}
 
     - name: print artifact
       run: |
-        cat artifact_file.txt
+        cat ${{ env.ARTIFACT_FILE }}
         
