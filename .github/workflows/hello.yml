@@ -2,9 +2,6 @@ name: hello
 
 on: [push]
 
-env:
-  ARTIFACT_FILE: my-file-${{ matrix.java-version }}.txt
-
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -17,6 +14,9 @@ jobs:
         include:
           - java-version: 29
             allow-failure: true
+
+    env:
+      ARTIFACT_FILE: my-file-${{ matrix.java-version }}.txt
 
     steps:
     - uses: actions/checkout@v2
@@ -59,6 +59,9 @@ jobs:
         include:
           - java-version: 29
             allow-failure: true
+
+    env:
+      ARTIFACT_FILE: my-file-${{ matrix.java-version }}.txt
 
     steps:
     - uses: actions/checkout@v2
