@@ -2,18 +2,20 @@ name: hello
 
 on: [push]
 
+x-common-strategy: &common-strategy
+  fail-fast: false
+  matrix:
+    java-version: [11, 17]
+    allow-failure: [false]
+    include:
+      - java-version: 29
+        allow-failure: true
+
 jobs:
   build:
     runs-on: ubuntu-latest
     continue-on-error: ${{ matrix.allow-failure }}
-    strategy:
-      fail-fast: false
-      matrix:
-        java-version: [ 11, 17 ]
-        allow-failure: [false]
-        include:
-          - java-version: 29
-            allow-failure: true
+    strategy: *common-strategy
 
     env:
       ARTIFACT_FILE: my-file-${{ matrix.java-version }}.txt
@@ -51,14 +53,7 @@ jobs:
 
     runs-on: ubuntu-latest
     continue-on-error: ${{ matrix.allow-failure }}
-    strategy:
-      fail-fast: false
-      matrix:
-        java-version: [ 11, 17 ]
-        allow-failure: [false]
-        include:
-          - java-version: 29
-            allow-failure: true
+    strategy: *common-strategy
 
     env:
       ARTIFACT_FILE: my-file-${{ matrix.java-version }}.txt
