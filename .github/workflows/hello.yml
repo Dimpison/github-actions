@@ -2,9 +2,6 @@ name: hello
 
 on: [push]
 
-env:
-  RELEASE_BRANCH: main
-
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -18,7 +15,7 @@ jobs:
           - java-version: 29
             allow-failure: true
 
-    if: ${{ github.ref == env.RELEASE_BRANCH }}
+    if: ${{ github.ref == 'refs/head/main' }}
 
     env:
       ARTIFACT_FILE: my-file-${{ matrix.java-version }}.txt
@@ -72,13 +69,13 @@ jobs:
     - uses: actions/checkout@v2
 
     - name: download artifact
-      if: ${{ ! github.ref == env.RELEASE_BRANCH }}
+      if: ${{ ! github.ref == 'refs/head/main' }}
       uses: actions/download-artifact@v4
       with:
         name: ${{ env.ARTIFACT_FILE }}
 
     - name: print artifact
-      if: ${{ ! github.ref == env.RELEASE_BRANCH }}
+      if: ${{ ! github.ref == 'refs/head/main' }}
       run: |
         cat ${{ env.ARTIFACT_FILE }}
         
