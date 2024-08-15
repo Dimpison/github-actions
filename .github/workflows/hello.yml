@@ -2,20 +2,20 @@ name: hello
 
 on: [push]
 
-x-common-strategy: &common-strategy
-  fail-fast: false
-  matrix:
-    java-version: [11, 17]
-    allow-failure: [false]
-    include:
-      - java-version: 29
-        allow-failure: true
-
 jobs:
   build:
     runs-on: ubuntu-latest
     continue-on-error: ${{ matrix.allow-failure }}
-    strategy: *common-strategy
+    strategy:
+      fail-fast: false
+      matrix:
+        java-version: [ 11, 17 ]
+        allow-failure: [false]
+        include:
+          - java-version: 29
+            allow-failure: true
+
+    if: ${{ github.ref == 'refs/heads/main' }}
 
     env:
       ARTIFACT_FILE: my-file-${{ matrix.java-version }}.txt
@@ -40,7 +40,7 @@ jobs:
         TEST: "Hello World"
       run: |
         echo $TEST >> ${{ env.ARTIFACT_FILE }}
-        echo ${{ env.GITHUB_USER }} >> ${{ env.ARTIFACT_FILE }}
+        echo ${{ env.GITHUB_ACTOR }} >> ${{ env.ARTIFACT_FILE }}
 
     - name: upload artifact
       uses: actions/upload-artifact@v4
@@ -51,9 +51,18 @@ jobs:
   test:
     needs: build
 
+    if: ${{ ! github.ref == 'refs/heads/main' }}
+
     runs-on: ubuntu-latest
     continue-on-error: ${{ matrix.allow-failure }}
-    strategy: *common-strategy
+    strategy:
+      fail-fast: false
+      matrix:
+        java-version: [ 11, 17 ]
+        allow-failure: [false]
+        include:
+          - java-version: 29
+            allow-failure: true
 
     env:
       ARTIFACT_FILE: my-file-${{ matrix.java-version }}.txt
