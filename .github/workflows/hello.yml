@@ -1,9 +1,23 @@
+# Docker image action
+# Composite action (custom one similar to the above)
+# Reusable worflow (a whole job)
+
+# Bunch of composite actions can be merged into a one reusable workflow
+# Team can use reusable workflow
+# Team can use reusable workflow and add some custom jobs w/ composite actions
+
 name: hello
 
 on: [push]
 
 jobs:
-  build:
+
+#  build-gradle:
+#    uses: Dimpison/github-actions/.github/workflows/build-sample.yml@main
+#    with:
+#      gradle: .github/labeler.yml
+
+  custom-build:
     runs-on: ubuntu-latest
     continue-on-error: ${{ matrix.allow-failure }}
     strategy:
@@ -49,7 +63,7 @@ jobs:
         path: ${{ env.ARTIFACT_FILE }}
 
   test:
-    needs: build
+    needs: custom-build
 
     runs-on: ubuntu-latest
     continue-on-error: ${{ matrix.allow-failure }}
