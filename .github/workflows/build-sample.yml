@@ -36,4 +36,4 @@ jobs:
         gradle-version: ${{ inputs.gradle-version }}
     - name: Build with Gradle ${{ inputs.gradle-version }}
       run: |
-        ./gradlew ${{ inputs.gradle-args }}
+        gradle ${{ inputs.gradle-args }}
