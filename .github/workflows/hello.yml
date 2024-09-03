@@ -15,7 +15,7 @@ jobs:
   build-gradle:
     uses: Dimpison/github-actions/.github/workflows/build-sample.yml@main
     with:
-      gradle-args: 'version'
+      gradle-args: '--version'
       gradle-version: '8.8'
 
   custom-build:

@@ -34,6 +34,7 @@ jobs:
       uses: gradle/actions/setup-gradle@v4
       with:
         gradle-version: ${{ inputs.gradle-version }}
-    - name: Build with Gradle ${{ inputs.gradle-version }}
+    - name: Run 'gradle ${{ inputs.gradle-args }}' w/ Gradle ${{ inputs.gradle-version }}
       run: |
+        java -version
         gradle ${{ inputs.gradle-args }}
